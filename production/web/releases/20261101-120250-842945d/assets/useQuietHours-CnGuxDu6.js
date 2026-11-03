@@ -1,0 +1,1 @@
+import{g as u,x as e}from"./index-Cjl5WVzN.js";function r(){const a=u([]);return e(async()=>{try{a.value=await window.SamiQuietHours.load("https://dashboard.sami-care.sa/api")}catch{}}),{bonus:(t,o,i)=>{var s;return((s=window.SamiQuietHours)==null?void 0:s.points(a.value,t,o,i))||0}}}export{r as u};
