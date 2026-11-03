@@ -95,7 +95,7 @@
                 ══════════════════════════════════════════════════ --}}
                 @canany(['view_loyalty'])
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider" style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-crown"></i>
                             {{ app()->getLocale() === 'ar' ? 'الولاء والإعدادات' : 'Loyalty & Settings' }}
