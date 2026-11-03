@@ -128,7 +128,7 @@
                 @role('admin')
                 @if (!auth()->user()->canAny(['view_loyalty']))
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider" style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-crown"></i>
                             {{ app()->getLocale() === 'ar' ? 'الولاء والإعدادات' : 'Loyalty & Settings' }}
@@ -149,7 +149,7 @@
                 ══════════════════════════════════════════════════ --}}
                 @if (auth()->user()->canAny(['view_wallet_admin','manage_wallet_withdrawals','manage_wallet_offers','manage_wallet_policy']) || auth()->user()->can('manage_payment_gateways'))
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider" style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-wallet"></i>
                             {{ app()->getLocale() === 'ar' ? 'المحفظة والمدفوعات' : 'Wallet & Payments' }}
@@ -187,7 +187,7 @@
                 ══════════════════════════════════════════════════ --}}
                 @if (auth()->user()->canAny(['view_gift','redeem_gift_branch','manage_gift_batches','manage_gift_designs','view_gift_reports']) || auth()->user()->can('view_Lucky_Wheel') || auth()->user()->can('view_ads'))
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider"style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-bullhorn"></i>
                             {{ app()->getLocale() === 'ar' ? 'التسويق والعروض' : 'Marketing & Offers' }}
@@ -260,7 +260,7 @@
                      ⑤ العملاء والحجوزات
                 ══════════════════════════════════════════════════ --}}
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider"style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-calendar-check"></i>
                             {{ app()->getLocale() === 'ar' ? 'العملاء والحجوزات' : 'Customers & Bookings' }}
@@ -306,7 +306,7 @@
                      ⑥ صفحات وخدمات الموقع
                 ══════════════════════════════════════════════════ --}}
                 <li class="nav-item sidebar-section-label">
-                    <div class="section-divider">
+                    <div class="section-divider"style="background: #f8f4ee;border-radius: 51px;margin: 7px;padding: 2px;">
                         <span class="section-title">
                             <i class="fa-solid fa-globe"></i>
                             {{ app()->getLocale() === 'ar' ? 'صفحات وخدمات الموقع' : 'Website & Services' }}
