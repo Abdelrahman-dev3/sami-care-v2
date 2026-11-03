@@ -32,41 +32,31 @@
         <div class="sidebar-list" id="sidebar">
             <ul class="navbar-nav iq-main-menu" id="sidebar-menu">
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 1 : القائمة الرئيسية (menu_builder)
-                ───────────────────────────────────────────────── --}}
+                {{-- ══════════════════════════════════════════════
+                     ① القائمة الرئيسية (menu_builder)
+                ══════════════════════════════════════════════════ --}}
 @php
     $menu = new \App\Http\Middleware\GenerateMenus();
     $menu = $menu->handle('menu', 'vertical', 'ARRAY_MENU');
 
     if (auth()->user()->hasRole('admin') || auth()->user()->can('overall_booking_report')) {
         $customerReportItem = $menu->add('<span class="item-name">'.e(__('customer_activity.title')).'</span>', [
-            'route' => 'backend.reports.customer-activity',
-            'class' => 'nav-item',
+            'route' => 'backend.reports.customer-activity', 'class' => 'nav-item',
         ])->data('order', 19)->prepend('<i class="fa-solid fa-users"></i> ');
         $customerReportItem->link->attr(['class' => 'nav-link']);
-        if (request()->routeIs('backend.reports.customer-activity')) {
-            $customerReportItem->active();
-            $customerReportItem->link->active();
-        }
+        if (request()->routeIs('backend.reports.customer-activity')) { $customerReportItem->active(); $customerReportItem->link->active(); }
 
         $referralReportItem = $menu->add('<span class="item-name">تقرير إحالات التسجيل</span>', [
             'route' => 'backend.reports.referrals', 'class' => 'nav-item',
         ])->data('order', 19)->prepend('<i class="fa-solid fa-user-plus"></i> ');
         $referralReportItem->link->attr(['class' => 'nav-link']);
-        if (request()->routeIs('backend.reports.referrals')) {
-            $referralReportItem->active();
-            $referralReportItem->link->active();
-        }
+        if (request()->routeIs('backend.reports.referrals')) { $referralReportItem->active(); $referralReportItem->link->active(); }
 
         $reviewReportItem = $menu->add('<span class="item-name">تقرير التقييمات</span>', [
             'route' => 'backend.reports.reviews', 'class' => 'nav-item',
         ])->data('order', 19)->data('keep_visible', true)->prepend('<i class="fa-solid fa-star"></i> ');
         $reviewReportItem->link->attr(['class' => 'nav-link']);
-        if (request()->routeIs('backend.reports.reviews')) {
-            $reviewReportItem->active();
-            $reviewReportItem->link->active();
-        }
+        if (request()->routeIs('backend.reports.reviews')) { $reviewReportItem->active(); $reviewReportItem->link->active(); }
 
         $menu = $menu->sortBy('order');
     }
@@ -91,32 +81,25 @@
 
     $filteredItems = $menu->roots()->filter(function($item) {
         if ($item->data('keep_visible')) return true;
-        $hiddenItems = [
-            'staff_earnings', 'أرباح', 'earnings',
-            'staffs_payouts', 'مدفوعات', 'payouts',
-            'reviews', 'التقييمات', 'review'
-        ];
+        $hiddenItems = ['staff_earnings','أرباح','earnings','staffs_payouts','مدفوعات','payouts','reviews','التقييمات','review'];
         foreach ($hiddenItems as $hidden) {
-            if (str_contains(strtolower($item->title), strtolower($hidden))) {
-                return false;
-            }
+            if (str_contains(strtolower($item->title), strtolower($hidden))) return false;
         }
         return true;
     });
 @endphp
-
 @include(config('laravel-menu.views.bootstrap-items'), ['items' => $filteredItems])
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 2 : الولاء والصلاحيات
-                ───────────────────────────────────────────────── --}}
+                {{-- ══════════════════════════════════════════════
+                     ② الولاء والصلاحيات
+                ══════════════════════════════════════════════════ --}}
                 @canany(['view_loyalty'])
-                <li class="nav-item static-item mt-3 pt-3 border-top">
-                    <div class="nav-link static-item" role="heading" aria-level="2" style="cursor:default">
-                        <span class="default-icon fw-bold" style="letter-spacing:normal;white-space:normal">
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-crown"></i>
                             {{ app()->getLocale() === 'ar' ? 'الولاء والإعدادات' : 'Loyalty & Settings' }}
                         </span>
-                        <span class="mini-icon" aria-hidden="true">•••</span>
                     </div>
                 </li>
 
@@ -126,16 +109,14 @@
                         <span class="item-name">{{ __('service_repeat.title') }}</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('backend.quiet-hours.index') }}" class="nav-link {{ request()->routeIs('backend.quiet-hours.*') ? 'active' : '' }}">
                         <i class="fa-solid fa-moon"></i>
                         <span class="item-name">{{ __('quiet_hours.title') }}</span>
                     </a>
                 </li>
-
                 @hasPermission('view_loyalty')
-                <li class="nav-item {{ request()->routeIs('app.loyalty') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.loyalty') }}" class="nav-link {{ request()->routeIs('app.loyalty') ? 'active' : '' }}">
                         <i class="fas fa-coins"></i>
                         <span class="item-name">{{ __('messages.loyalty_management') }}</span>
@@ -145,6 +126,16 @@
                 @endcanany
 
                 @role('admin')
+                @if (!auth()->user()->canAny(['view_loyalty']))
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-crown"></i>
+                            {{ app()->getLocale() === 'ar' ? 'الولاء والإعدادات' : 'Loyalty & Settings' }}
+                        </span>
+                    </div>
+                </li>
+                @endif
                 <li class="nav-item">
                     <a href="{{ route('backend.access.index') }}" class="nav-link {{ request()->routeIs('backend.access.*') ? 'active' : '' }}">
                         <i class="fa-solid fa-user-shield"></i>
@@ -153,28 +144,28 @@
                 </li>
                 @endrole
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 3 : المحفظة والمدفوعات
-                ───────────────────────────────────────────────── --}}
-                @if (auth()->user()->canAny(['view_wallet_admin', 'manage_wallet_withdrawals', 'manage_wallet_offers', 'manage_wallet_policy']) || auth()->user()->can('manage_payment_gateways'))
-                <li class="nav-item static-item mt-3 pt-3 border-top">
-                    <div class="nav-link static-item" role="heading" aria-level="2" style="cursor:default">
-                        <span class="default-icon fw-bold" style="letter-spacing:normal;white-space:normal">
+                {{-- ══════════════════════════════════════════════
+                     ③ المحفظة والمدفوعات
+                ══════════════════════════════════════════════════ --}}
+                @if (auth()->user()->canAny(['view_wallet_admin','manage_wallet_withdrawals','manage_wallet_offers','manage_wallet_policy']) || auth()->user()->can('manage_payment_gateways'))
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-wallet"></i>
                             {{ app()->getLocale() === 'ar' ? 'المحفظة والمدفوعات' : 'Wallet & Payments' }}
                         </span>
-                        <span class="mini-icon" aria-hidden="true">•••</span>
                     </div>
                 </li>
                 @endif
 
-                @if (auth()->user()->canAny(['view_wallet_admin', 'manage_wallet_withdrawals', 'manage_wallet_offers', 'manage_wallet_policy']))
+                @if (auth()->user()->canAny(['view_wallet_admin','manage_wallet_withdrawals','manage_wallet_offers','manage_wallet_policy']))
                 @php
                     $walletHome = auth()->user()->can('view_wallet_admin') ? route('wallet.index')
                         : (auth()->user()->can('manage_wallet_withdrawals') ? route('wallet.withdrawals')
                         : (auth()->user()->can('manage_wallet_offers') ? route('wallet.offers') : route('wallet.policy')));
-                    $walletActive = request()->routeIs('wallet.index', 'wallet.withdrawals', 'wallet.offers', 'wallet.policy');
+                    $walletActive = request()->routeIs('wallet.index','wallet.withdrawals','wallet.offers','wallet.policy');
                 @endphp
-                <li class="nav-item {{ $walletActive ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ $walletHome }}" class="nav-link {{ $walletActive ? 'active' : '' }}">
                         <i class="fa-solid fa-wallet"></i>
                         <span class="item-name">{{ __('wallet_ledger.admin.title') }}</span>
@@ -183,7 +174,7 @@
                 @endif
 
                 @can('manage_payment_gateways')
-                <li class="nav-item {{ request()->routeIs('backend.payment-gateways.*') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('backend.payment-gateways.index') }}" class="nav-link {{ request()->routeIs('backend.payment-gateways.*') ? 'active' : '' }}">
                         <i class="fa-solid fa-credit-card"></i>
                         <span class="item-name">{{ __('payment_gateways.title') }}</span>
@@ -191,29 +182,29 @@
                 </li>
                 @endcan
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 4 : التسويق والعروض
-                ───────────────────────────────────────────────── --}}
-                @if (auth()->user()->canAny(['view_gift', 'redeem_gift_branch', 'manage_gift_batches', 'manage_gift_designs', 'view_gift_reports']) || auth()->user()->can('view_Lucky_Wheel') || auth()->user()->can('view_ads'))
-                <li class="nav-item static-item mt-3 pt-3 border-top">
-                    <div class="nav-link static-item" role="heading" aria-level="2" style="cursor:default">
-                        <span class="default-icon fw-bold" style="letter-spacing:normal;white-space:normal">
+                {{-- ══════════════════════════════════════════════
+                     ④ التسويق والعروض
+                ══════════════════════════════════════════════════ --}}
+                @if (auth()->user()->canAny(['view_gift','redeem_gift_branch','manage_gift_batches','manage_gift_designs','view_gift_reports']) || auth()->user()->can('view_Lucky_Wheel') || auth()->user()->can('view_ads'))
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-bullhorn"></i>
                             {{ app()->getLocale() === 'ar' ? 'التسويق والعروض' : 'Marketing & Offers' }}
                         </span>
-                        <span class="mini-icon" aria-hidden="true">•••</span>
                     </div>
                 </li>
                 @endif
 
-                @if (auth()->user()->canAny(['view_gift', 'redeem_gift_branch', 'manage_gift_batches', 'manage_gift_designs', 'view_gift_reports']))
+                @if (auth()->user()->canAny(['view_gift','redeem_gift_branch','manage_gift_batches','manage_gift_designs','view_gift_reports']))
                 @php
                     $giftHome = auth()->user()->can('view_gift') ? route('app.gift')
                         : (auth()->user()->can('redeem_gift_branch') ? route('gifts.redeem')
                         : (auth()->user()->can('view_gift_reports') ? route('gifts.report')
                         : (auth()->user()->can('manage_gift_batches') ? route('gifts.batches') : route('gift-designs.index'))));
-                    $giftActive = request()->routeIs('app.gift', 'gifts.*', 'gift-designs.*');
+                    $giftActive = request()->routeIs('app.gift','gifts.*','gift-designs.*');
                 @endphp
-                <li class="nav-item {{ $giftActive ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ $giftHome }}" class="nav-link {{ $giftActive ? 'active' : '' }}">
                         <i class="fa fa-gift"></i>
                         <span class="item-name">{{ __('messagess.gifts') }}</span>
@@ -222,9 +213,9 @@
                 @endif
 
                 @hasPermission('view_Lucky_Wheel')
-                <li class="nav-item {{ request()->routeIs('app.Wheel') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.Wheel') }}" class="nav-link {{ request()->routeIs('app.Wheel') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="15" height="20">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="15" height="20" style="flex-shrink:0">
                           <rect width="100%" height="100%" fill="transparent"/>
                           <g transform="translate(0,0)">
                             <path d="M250,250 L250,0 A250,250 0 0,1 375,33.494 Z" fill="#6c757d"/>
@@ -250,30 +241,30 @@
                 @endhasPermission
 
                 @hasPermission('view_ads')
-                <li class="nav-item {{ request()->routeIs('app.ads') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.ads') }}" class="nav-link {{ request()->routeIs('app.ads') ? 'active' : '' }}">
-                        <i class="fa-solid fa-bullhorn"></i>
+                        <i class="fa-solid fa-rectangle-ad"></i>
                         <span class="item-name">{{ __('messagess.Ads') }}</span>
                     </a>
                 </li>
                 @endhasPermission
 
-                <li class="nav-item {{ request()->routeIs('app.offer-banners') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.offer-banners') }}" class="nav-link {{ request()->routeIs('app.offer-banners') ? 'active' : '' }}">
                         <i class="fas fa-tags"></i>
                         <span class="item-name">بنرات العروض</span>
                     </a>
                 </li>
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 5 : إدارة العملاء والحجوزات
-                ───────────────────────────────────────────────── --}}
-                <li class="nav-item static-item mt-3 pt-3 border-top">
-                    <div class="nav-link static-item" role="heading" aria-level="2" style="cursor:default">
-                        <span class="default-icon fw-bold" style="letter-spacing:normal;white-space:normal">
+                {{-- ══════════════════════════════════════════════
+                     ⑤ العملاء والحجوزات
+                ══════════════════════════════════════════════════ --}}
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-calendar-check"></i>
                             {{ app()->getLocale() === 'ar' ? 'العملاء والحجوزات' : 'Customers & Bookings' }}
                         </span>
-                        <span class="mini-icon" aria-hidden="true">•••</span>
                     </div>
                 </li>
 
@@ -286,7 +277,7 @@
                 </li>
                 @endhasPermission
 
-                <li class="nav-item {{ request()->routeIs('app.booking-reviews') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.booking-reviews') }}" class="nav-link {{ request()->routeIs('app.booking-reviews') ? 'active' : '' }}">
                         <i class="fas fa-star-half-alt"></i>
                         <span class="item-name">آراء العملاء</span>
@@ -303,7 +294,7 @@
                 @endrole
 
                 @hasPermission('view_reject_reasons')
-                <li class="nav-item {{ request()->routeIs('app.reject') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.reject') }}" class="nav-link {{ request()->routeIs('app.reject') ? 'active' : '' }}">
                         <i class="fa-solid fa-ban"></i>
                         <span class="item-name">{{ __('messagess.cancellation_of_reservation') }}</span>
@@ -311,15 +302,15 @@
                 </li>
                 @endhasPermission
 
-                {{-- ─────────────────────────────────────────────
-                     قسم 6 : صفحات وخدمات الموقع
-                ───────────────────────────────────────────────── --}}
-                <li class="nav-item static-item mt-3 pt-3 border-top">
-                    <div class="nav-link static-item" role="heading" aria-level="2" style="cursor:default">
-                        <span class="default-icon fw-bold" style="letter-spacing:normal;white-space:normal">
-                            {{ app()->getLocale() === 'ar' ? 'صفحات وخدمات الموقع' : 'Website Pages & Services' }}
+                {{-- ══════════════════════════════════════════════
+                     ⑥ صفحات وخدمات الموقع
+                ══════════════════════════════════════════════════ --}}
+                <li class="nav-item sidebar-section-label">
+                    <div class="section-divider">
+                        <span class="section-title">
+                            <i class="fa-solid fa-globe"></i>
+                            {{ app()->getLocale() === 'ar' ? 'صفحات وخدمات الموقع' : 'Website & Services' }}
                         </span>
-                        <span class="mini-icon" aria-hidden="true">•••</span>
                     </div>
                 </li>
 
@@ -329,11 +320,10 @@
                         <span class="item-name">{{ app()->getLocale()=='ar' ? 'QR صفحات الموقع' : 'Website Pages QR' }}</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('backend.dynamic-qr.index') }}" class="nav-link {{ request()->routeIs('backend.dynamic-qr.*') ? 'active' : '' }}">
-                        <i class="fa fa-qrcode"></i>
-                        <span class="item-name">{{ app()->getLocale()=='ar' ? 'إدارة QR الديناميكي' : 'Dynamic QR Management' }}</span>
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span class="item-name">{{ app()->getLocale()=='ar' ? 'إدارة QR الديناميكي' : 'Dynamic QR' }}</span>
                     </a>
                 </li>
 
@@ -344,43 +334,37 @@
                         <span class="item-name">محتوى الرئيسية</span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->routeIs('backend.about-page.*') ? 'active' : '' }}">
-                    <a href="{{ route('backend.about-page.edit') }}" class="nav-link">
+                <li class="nav-item">
+                    <a href="{{ route('backend.about-page.edit') }}" class="nav-link {{ request()->routeIs('backend.about-page.*') ? 'active' : '' }}">
                         <i class="fas fa-info-circle"></i>
                         <span class="item-name">الصفحة التعريفية</span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->routeIs('backend.home-service-page.*') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('backend.home-service-page.edit') }}" class="nav-link {{ request()->routeIs('backend.home-service-page.*') ? 'active' : '' }}">
                         <i class="fas fa-concierge-bell"></i>
                         <span class="item-name">صفحة الخدمة المنزلية</span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->routeIs('backend.cafe-page.*') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('backend.cafe-page.edit') }}" class="nav-link {{ request()->routeIs('backend.cafe-page.*') ? 'active' : '' }}">
                         <i class="fas fa-mug-hot"></i>
                         <span class="item-name">صفحة المقهى التعريفية</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('backend.faq.edit') }}" class="nav-link {{ request()->routeIs('backend.faq.*') ? 'active' : '' }}">
                         <i class="fas fa-circle-question"></i>
                         <span class="item-name">{{ __('faq.title') }}</span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->routeIs('backend.frontend-seo.*') ? 'active' : '' }}">
-                    <a href="{{ route('backend.frontend-seo.edit') }}" class="nav-link">
-                        <i class="fas fa-search"></i>
+                <li class="nav-item">
+                    <a href="{{ route('backend.frontend-seo.edit') }}" class="nav-link {{ request()->routeIs('backend.frontend-seo.*') ? 'active' : '' }}">
+                        <i class="fas fa-magnifying-glass-chart"></i>
                         <span class="item-name">إعدادات SEO</span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->routeIs('app.TermsAndConditions') ? 'active' : '' }}">
+                <li class="nav-item">
                     <a href="{{ route('app.TermsAndConditions') }}" class="nav-link {{ request()->routeIs('app.TermsAndConditions') ? 'active' : '' }}">
                         <i class="fas fa-file-contract"></i>
                         <span class="item-name">{{ __('messages.TermsAndConditions') }}</span>
@@ -389,7 +373,8 @@
                 @endhasPermission
 
                 @hasPermission('view_sms')
-                {{-- <li class="nav-item {{ request()->routeIs('app.sms') ? 'active' : '' }}">
+                {{-- SMS — currently disabled
+                <li class="nav-item">
                     <a href="{{ route('app.sms') }}" class="nav-link {{ request()->routeIs('app.sms') ? 'active' : '' }}">
                         <i class="fas fa-sms"></i>
                         <span class="item-name">{{ __('messages.sms') }}</span>
