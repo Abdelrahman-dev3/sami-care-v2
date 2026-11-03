@@ -621,6 +621,10 @@ body.uikit .btn-download {
   gap: 0.5rem;
   padding: 0.35rem 1rem 0.25rem;
   margin-bottom: 0.15rem;
+  background: #f8f4ee;
+  border-radius: 51px;
+  margin: 7px;
+  padding: 2px;
 }
 
 .sidebar-section-label .section-divider::after {

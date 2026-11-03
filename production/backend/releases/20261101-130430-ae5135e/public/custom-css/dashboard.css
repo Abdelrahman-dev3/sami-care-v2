@@ -370,3 +370,122 @@ legend {
 .dark .multiselect-no-options {
   color: #ffffff !important;
 }
+
+
+/* ================================================================
+   SIDEBAR MODERN REFINEMENT & SECTION STYLES
+   ================================================================ */
+
+/* Section header / divider */
+.sidebar-base .nav-item.sidebar-section-label {
+  padding: 0 !important;
+  margin-top: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-section-label .section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem 0.25rem;
+}
+
+[dir="rtl"] .sidebar-section-label .section-divider {
+  padding: 0.4rem 1rem 0.25rem;
+}
+
+.sidebar-section-label .section-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(var(--bs-primary-rgb), 0.22), transparent);
+}
+
+[dir="rtl"] .sidebar-section-label .section-divider::after {
+  background: linear-gradient(to left, rgba(var(--bs-primary-rgb), 0.22), transparent);
+}
+
+.sidebar-section-label .section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+  opacity: 0.85;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.sidebar-section-label .section-title i {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+/* Sidebar item layout polish */
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) {
+  margin: 2px 0.5rem;
+}
+
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link {
+  border-radius: 0.5rem !important;
+  padding: 0.55rem 0.85rem !important;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-base .nav-item .nav-link i,
+.sidebar-base .nav-item .nav-link svg {
+  width: 1.35rem;
+  min-width: 1.35rem;
+  text-align: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.sidebar-base .nav-item .nav-link .item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Active item highlight */
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link.active,
+.sidebar.sidebar-default .nav-link:not(.static-item).active {
+  background: linear-gradient(135deg, var(--bs-primary) 0%, rgba(var(--bs-primary-rgb), 0.82) 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px -2px rgba(var(--bs-primary-rgb), 0.45) !important;
+}
+
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link.active i,
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link.active svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Hover effect */
+.sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link:hover:not(.active) {
+  background: rgba(var(--bs-primary-rgb), 0.08) !important;
+  color: var(--bs-primary) !important;
+  transform: translateX(-3px);
+}
+
+[dir="ltr"] .sidebar-base .nav-item:not(.static-item):not(.sidebar-section-label) .nav-link:hover:not(.active) {
+  transform: translateX(3px);
+}
+
+/* Mini sidebar adjustments */
+.sidebar.sidebar-mini:not(.sidebar-hover:hover) .sidebar-section-label .section-title {
+  display: none !important;
+}
+.sidebar.sidebar-mini:not(.sidebar-hover:hover) .sidebar-section-label .section-divider::after {
+  display: none !important;
+}
+.sidebar.sidebar-mini:not(.sidebar-hover:hover) .sidebar-section-label .section-divider::before {
+  content: "•••";
+  font-size: 0.65rem;
+  color: var(--bs-primary);
+  opacity: 0.6;
+  margin: 0 auto;
+}
